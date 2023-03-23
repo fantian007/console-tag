@@ -10,6 +10,10 @@
     "dist",
     "readme.md"
   ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "engines": {
     "node": ">=14"
   },
