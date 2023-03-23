@@ -23,7 +23,8 @@
     "lint": "tsdx lint",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "preview": "cd example && yarn start"
+    "preview": "cd example && yarn start",
+    "prepublish": "yarn build"
   },
   "peerDependencies": {
     "html-webpack-plugin": ">= 3",
