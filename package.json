@@ -1,4 +1,5 @@
 {
+  "private": false,
   "name": "@sprit/pretty-console-webpack-plugin",
   "author": "1562743134@qq.com",
   "version": "0.1.0",
