@@ -27,14 +27,14 @@ export default (option: IOption) => {
   if (option.NODE_ENV) {
     const NODE_ENV = getEnv('NODE_ENV');
 
-    consoleArr.push(getConsole('NODE_ENV', defaultToEmpty(NODE_ENV), '#20e014'));
+    consoleArr.push(getConsole('NODE_ENV', defaultToEmpty(NODE_ENV), { keyBgColor: '#20e014' }));
   }
 
   // git
-  if (option?.git) {
+  if (option.git) {
+    const { git } = option;
+    
     const gitIns = new Git();
-
-    const git = option.git;
 
     // 分支
     if (git.branch) {
@@ -62,53 +62,6 @@ export default (option: IOption) => {
       const lastCommitTime = gitIns.lastcommitdatetime();
 
       consoleArr.push(getConsole('git 最近提交时间', defaultToEmpty(lastCommitTime)));
-    }
-  }
-
-  // scm
-  if (option?.scm) {
-    const scm = option.scm;
-
-    // 构建版本
-    if (scm.buildVersion) {
-      const buildVersion = getEnv('BUILD_VERSION');
-
-      consoleArr.push(getConsole('scm 构建版本', defaultToEmpty(buildVersion)));
-    }
-
-    // 构建用户
-    if (scm.buildUser) {
-      const buildUser = getEnv('BUILD_USER');
-
-      consoleArr.push(getConsole('scm 构建用户', defaultToEmpty(buildUser)));
-    }
-
-    // 构建类型
-    if (scm.buildType) {
-      const buildType = getEnv('BUILD_TYPE');
-
-      consoleArr.push(getConsole('scm 构建类型', defaultToEmpty(buildType)));
-    }
-
-    // 构建git
-    if (scm.buildGit) {
-      const buildGit = getEnv('BUILD_GIT');
-
-      consoleArr.push(getConsole('scm 构建git源', defaultToEmpty(buildGit)));
-    }
-
-    // 构建语言
-    if (scm.buildLanguage) {
-      const buildLanguage = getEnv('BUILD_LANGUAGE');
-
-      consoleArr.push(getConsole('scm 构建语言', defaultToEmpty(buildLanguage)));
-    }
-
-    // 构建时间
-    if (scm.buildPubDate) {
-      const buildPubDate = getEnv('BUILD_PUB_DATE');
-
-      consoleArr.push(getConsole('scm 构建时间', defaultToEmpty(buildPubDate)));
     }
   }
 

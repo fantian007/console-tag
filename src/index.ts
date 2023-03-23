@@ -1,30 +1,45 @@
-import { Compiler } from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import { IOption } from './interface';
+// @ts-nocheck
+import { Compiler, Compilation } from 'webpack';
 import { getConsole } from './helpers/console';
-import collectOptionConsole from './collectOptionConsole';
+import { PLUGIN_NAME, DEFAULT_OPTION } from './constant';
+import { log } from './helpers/logger';
+import collectConsole from './collect';
+import { IOption } from './interface';
+// @ts-ignore
+import safeRequire from 'safe-require';
 
-// 插件名
-export const pluginName = 'BuildConsolePlugin';
-// 默认配置
-const defaultOption: Partial<IOption> = {
-  NODE_ENV: true,
-  git: {
-    branch: true,
-    hash: 7,
-  },
-}
+const HtmlWebpackPlugin = safeRequire('html-webpack-plugin');
 
-export class BuildConsolePlugin {
+// 判断 插件 主版本号
+const htmlWebpackPluginMajarVer = HtmlWebpackPlugin.version;
+// 打印版本号
+log(`检测到 html-webpack-plugin 主版本号: ${htmlWebpackPluginMajarVer}`);
+
+
+/**
+ * webpack 美化打印 插件
+ */
+export class PrettyConsoleWebpackPlugin {
   option: IOption;
 
   constructor(option?: IOption) {
-    this.option = Object.assign<IOption, Partial<IOption> | undefined>(defaultOption, option);
+    this.option = Object.assign<IOption, Partial<IOption> | undefined>(DEFAULT_OPTION, option);
+  }
+
+  getCompilationHook<R>(compilation: Compilation, name: string) {
+    return (compilation.hooks as Record<string, any>)[name] as R;
   }
 
   apply(compiler: Compiler) {
-    compiler.hooks.compilation.tap(pluginName, compilation => {
-      const consoleArr: ReturnType<typeof getConsole>[] = collectOptionConsole(this.option);
+    compiler.hooks.compilation.tap(PLUGIN_NAME, compilation => {
+      /**
+       * 兼容旧版本
+       */
+      // const hooksV1 = this.getCompilationHook(compilation, 'htmlWebpackPluginBeforeHtmlProcessing');
+      // const hooksV2 = this.getCompilationHook(compilation, 'html-webpack-plugin-before-html-processing');
+      const hooksV3 = HtmlWebpackPlugin.getHooks(compilation).afterTemplateExecution;
+
+      const consoleArr: ReturnType<typeof getConsole>[] = collectConsole(this.option);
 
       const consoleCode = `
       ;${consoleArr
@@ -32,27 +47,29 @@ export class BuildConsolePlugin {
           .join(';')};
        `;
 
-      // 判断 插件 主版本号
-      const htmlWebpackPluginMajarVer = HtmlWebpackPlugin.version;
-      console.info(`[build-console-webpack-plugin] 检测到 html-webpack-plugin 主版本号: ${htmlWebpackPluginMajarVer}`);
+      if (hooksV3) {
+        log(`加载标签2`);
 
-      if (htmlWebpackPluginMajarVer === 5) {
-        //  @ts-ignore
-        HtmlWebpackPlugin.getHooks(compilation).alterAssetTagGroups.tapAsync(pluginName, (opt, cb) => {
-          console.log('[build-console-webpack-plugin] alterAssetTagGroups');
+        // @ts-ignore
+        hooksV3.tap(PLUGIN_NAME, (data) => {
+          log(`进来了-2`);
 
-          opt.headTags.unshift(HtmlWebpackPlugin.createHtmlTagObject(
-            'script',
-            {
-              type: 'text/javascript',
-            },
-            consoleCode
-          ));
+          log(data);
+        });
 
-          cb();
+        // @ts-ignore
+        hooksV3.tapAsync(PLUGIN_NAME, (data, cb) => {
+          log(`进来了-alterAssetTagGroups`);
+
+          // data.bodyTags.unshift(consoleCode);
+          data.html = '被替换了';
+
+          cb(null, data);
         });
       }
     });
   }
 }
+
 export { default as Git } from './helpers/git';
+export { getConsole } from './helpers/console';

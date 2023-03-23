@@ -1,40 +1,6 @@
+import type { GitOptions } from './interface';
 import runGitCommand from './run-git-command';
-
-const COMMITHASH_COMMAND = 'rev-parse HEAD';
-const VERSION_COMMAND = 'describe --always';
-const BRANCH_COMMAND = 'rev-parse --abbrev-ref HEAD';
-const LASTCOMMITDATETIME_COMMAND = 'log -1 --format=%cI';
-
-export interface GitOptions {
-  /**
-   * 工作树
-   */
-  gitWorkTree?: string;
-  /**
-   * 提交哈希
-   */
-  commithashCommand?: string;
-  /**
-   * 版本
-   */
-  versionCommand?: string;
-  /**
-   * 是否输出分支名到文件
-   */
-  branch?: boolean;
-  /**
-   * 取分支名命令
-   */
-  branchCommand?: string;
-  /**
-   * 取最近一次提交时间的命令
-   */
-  lastCommitDateTimeCommand?: string;
-  /**
-   * 获取版本时，是否匹配轻量级标签
-   */
-  lightweightTags?: boolean;
-}
+import { BRANCH_COMMAND, COMMITHASH_COMMAND, LASTCOMMITDATETIME_COMMAND, VERSION_COMMAND } from './constant';
 
 export default class Git {
   gitWorkTree?: string;

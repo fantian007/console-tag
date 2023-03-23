@@ -39,43 +39,4 @@ export interface IOption {
      */
     lastCommitDateTime?: boolean;
   };
-  /**
-   * scm 构建信息
-   */
-  scm?: {
-    /**
-     * 构建时间
-     */
-    buildPubDate?: boolean;
-    /**
-     * 构建版本
-     * 
-     * @default true
-     */
-    buildVersion?: boolean;
-    /**
-     * 构建类型
-     * 
-     * @default false
-     */
-    buildType?: boolean;
-    /**
-     * 构建语言
-     * 
-     * @default false
-     */
-    buildLanguage?: boolean;
-    /**
-     * 构建用户
-     * 
-     * @default true
-     */
-    buildUser?: boolean;
-    /**
-     * git 仓库源
-     * 
-     * @default false
-     */
-    buildGit?: boolean;
-  };
 }
