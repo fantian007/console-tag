@@ -48,21 +48,13 @@ export class PrettyConsoleWebpackPlugin {
        `;
 
       if (hooksV3) {
-        log(`加载标签2`);
-
-        // @ts-ignore
-        hooksV3.tap(PLUGIN_NAME, (data) => {
-          log(`进来了-2`);
-
-          log(data);
-        });
+        log(`register task`);
 
         // @ts-ignore
         hooksV3.tapAsync(PLUGIN_NAME, (data, cb) => {
-          log(`进来了-alterAssetTagGroups`);
+          log(`inject tags`);
 
-          // data.bodyTags.unshift(consoleCode);
-          data.html = '被替换了';
+          data.headTags.unshift(consoleCode);
 
           cb(null, data);
         });
