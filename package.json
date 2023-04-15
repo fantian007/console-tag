@@ -27,7 +27,6 @@
     "prepublish": "yarn build"
   },
   "peerDependencies": {
-    "html-webpack-plugin": ">= 3",
     "react": ">=16",
     "webpack": "^5.28.0"
   },
