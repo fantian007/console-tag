@@ -15,7 +15,6 @@ const htmlWebpackPluginMajarVer = HtmlWebpackPlugin.version;
 // 打印版本号
 log(`检测到 html-webpack-plugin 主版本号: ${htmlWebpackPluginMajarVer}`);
 
-
 /**
  * webpack 美化打印 插件
  */
@@ -35,28 +34,33 @@ export class PrettyConsoleWebpackPlugin {
       /**
        * 兼容旧版本
        */
-      // const hooksV1 = this.getCompilationHook(compilation, 'htmlWebpackPluginBeforeHtmlProcessing');
-      // const hooksV2 = this.getCompilationHook(compilation, 'html-webpack-plugin-before-html-processing');
-      const hooksV3 = HtmlWebpackPlugin.getHooks(compilation).afterTemplateExecution;
+      const hooksV1 = this.getCompilationHook(compilation, 'htmlWebpackPluginBeforeHtmlProcessing');
+      const hooksV2 = this.getCompilationHook(compilation, 'html-webpack-plugin-before-html-processing');
+      
+      const alterAssetTagGroupsHook = hooksV1 ?? hooksV2 ?? HtmlWebpackPlugin.getHooks(compilation).alterAssetTagGroups;
 
-      const consoleArr: ReturnType<typeof getConsole>[] = collectConsole(this.option);
-
-      const consoleCode = `
-      ;${consoleArr
-          .map(item => `console.log.apply(this, [${item.map(f => `'${f}'`)}])`)
-          .join(';')};
-       `;
-
-      if (hooksV3) {
+      if (alterAssetTagGroupsHook) {
         log(`register task`);
 
         // @ts-ignore
-        hooksV3.tapAsync(PLUGIN_NAME, (data, cb) => {
+        alterAssetTagGroupsHook.tap(PLUGIN_NAME, (data) => {
           log(`inject tags`);
 
-          data.headTags.unshift(consoleCode);
+          const consoleArr: ReturnType<typeof getConsole>[] = collectConsole(this.option);
 
-          cb(null, data);
+          const consoleCode = `
+          ;${consoleArr
+              .map(item => `console.log.apply(this, [${item.map(f => `'${f}'`)}])`)
+              .join(';')};
+           `;
+
+          const scriptContent = HtmlWebpackPlugin.createHtmlTagObject(
+            'script',
+            undefined,
+            consoleCode,
+          );
+
+          data.headTags.unshift(scriptContent);
         });
       }
     });
