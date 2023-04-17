@@ -9,7 +9,8 @@
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "readme.md"
+    "images",
+    "README.MD"
   ],
   "publishConfig": {
     "access": "public",
