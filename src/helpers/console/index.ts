@@ -5,7 +5,7 @@ import { defaultOption } from './constant';
  * 获取 console 信息
  */
 export const getConsole: GetConsole = (key, val, option = defaultOption) => {
-  const { keyBgColor, valBgColor } = option;
+  const { keyBgColor = '#363636', valBgColor = '#175e9c' } = option;
 
   return [
     `%c ${key} %c${val}`,

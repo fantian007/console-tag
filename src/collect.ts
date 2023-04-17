@@ -65,5 +65,14 @@ export default (option: IOption) => {
     }
   }
 
+  // 自定义
+  if (option.custom) {
+    const map = option.custom();
+
+    for (const [k, v] of Object.entries(map)) {
+      consoleArr.push(getConsole(k, defaultToEmpty(v)));
+    }
+  }
+
   return consoleArr;
 }

@@ -1,12 +1,11 @@
-// @ts-nocheck
 import { Compiler, Compilation } from 'webpack';
-import { getConsole } from './helpers/console';
+// @ts-ignore safe-requre 无类型文件
+import safeRequire from 'safe-require';
 import { PLUGIN_NAME, DEFAULT_OPTION } from './constant';
+import { getConsole } from './helpers/console';
 import { log } from './helpers/logger';
 import collectConsole from './collect';
 import { IOption } from './interface';
-// @ts-ignore
-import safeRequire from 'safe-require';
 
 const HtmlWebpackPlugin = safeRequire('html-webpack-plugin');
 
@@ -40,12 +39,7 @@ export class PrettyConsoleWebpackPlugin {
       const alterAssetTagGroupsHook = hooksV1 ?? hooksV2 ?? HtmlWebpackPlugin.getHooks(compilation).alterAssetTagGroups;
 
       if (alterAssetTagGroupsHook) {
-        log(`register task`);
-
-        // @ts-ignore
-        alterAssetTagGroupsHook.tap(PLUGIN_NAME, (data) => {
-          log(`inject tags`);
-
+        alterAssetTagGroupsHook.tap(PLUGIN_NAME, (data: any) => {
           const consoleArr: ReturnType<typeof getConsole>[] = collectConsole(this.option);
 
           const consoleCode = `

@@ -39,4 +39,8 @@ export interface IOption {
      */
     lastCommitDateTime?: boolean;
   };
+  /**
+   * 自定义
+   */
+  custom?: () => Record<string, string>;
 }
