@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@sprit/pretty-console-webpack-plugin",
-  "author": "1562743134@qq.com",
+  "author": "赵永盛<1562743134@qq.com>",
   "version": "0.1.5",
   "license": "MIT",
   "main": "dist/index.js",
@@ -17,6 +17,11 @@
   "engines": {
     "node": ">=14"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fantian007/pretty-console-webpack-plugin"
+  },
+  "homepage": "https://github.com/fantian007/pretty-console-webpack-plugin",
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
