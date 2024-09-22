@@ -1,6 +1,3 @@
-/**
- * 由 option 收集 console 信息
- */
 import { IOption } from './interface';
 import { getConsole } from './helpers/console';
 import Git from './helpers/git';
@@ -20,7 +17,10 @@ export const getEnv = (key: string) => process.env[key];
  */
 export const defaultToEmpty = (value: string | undefined | null) => value ?? EMPTY_STR;
 
-export default (option: IOption) => {
+/**
+ * 聚合 console
+ */
+export const combineConsole = (option: IOption) => {
   const consoleArr: ReturnType<typeof getConsole>[] = [];
 
   // NODE_ENV
@@ -33,7 +33,7 @@ export default (option: IOption) => {
   // git
   if (option.git) {
     const { git } = option;
-    
+
     const gitIns = new Git();
 
     // 分支
@@ -75,4 +75,17 @@ export default (option: IOption) => {
   }
 
   return consoleArr;
+}
+
+/**
+ * 获取 html script
+ */
+export const getHtmlScript = (option: IOption) => {
+  const consoleArr: ReturnType<typeof getConsole>[] = combineConsole(option);
+
+  return `
+  ;${consoleArr
+      .map(item => `console.log.apply(this, [${item.map(f => `'${f}'`)}])`)
+      .join(';')};
+   `;
 }
