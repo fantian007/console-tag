@@ -10,7 +10,7 @@
     "构建版本",
     "控制台标签"
   ],
-  "version": "0.1.9",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
