@@ -1,5 +1,5 @@
 import { HtmlRspackPlugin } from '@rspack/core';
-import { IOption } from '@/interface';
+import { IOption } from '../../interface';
 
 export interface IRspackOption extends IOption {
   /**

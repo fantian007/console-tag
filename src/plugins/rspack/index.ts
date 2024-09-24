@@ -1,8 +1,8 @@
 import { merge } from 'lodash-es';
 import { Compiler, RspackPluginInstance } from '@rspack/core';
-import { PLUGIN_NAME, DEFAULT_OPTION } from '@/constant';
+import { PLUGIN_NAME, DEFAULT_OPTION } from '../../constant';
+import { getHtmlScript } from '../../utils';
 import type { IRspackOption } from './interface';
-import { getHtmlScript } from '@/utils';
 
 /**
  * rspack 插件

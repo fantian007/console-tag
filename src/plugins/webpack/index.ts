@@ -3,10 +3,10 @@ import { merge } from 'lodash-es';
 import safeRequire from 'safe-require';
 import { Compiler, Compilation } from 'webpack';
 import HtmlWebpackPlugin, { } from 'html-webpack-plugin';
-import { PLUGIN_NAME, DEFAULT_OPTION } from '@/constant';
-import { log } from '@/helpers/logger';
+import { PLUGIN_NAME, DEFAULT_OPTION } from '../../constant';
+import { log } from '../../helpers/logger';
+import { getHtmlScript } from '../../utils';
 import { IWebpackOption } from './interface';
-import { getHtmlScript } from '@/utils';
 
 /**
  * webpack 插件
