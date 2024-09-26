@@ -1,6 +1,6 @@
 {
   "private": false,
-  "name": "@sprit/console-tag-plugin",
+  "name": "@sprit/console-tag",
   "author": "赵永盛<1562743134@qq.com>",
   "keywords": [
     "console tags",
@@ -10,7 +10,7 @@
     "构建版本",
     "控制台标签"
   ],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -28,9 +28,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fantian007/console-tag-plugin"
+    "url": "https://github.com/fantian007/console-tag"
   },
-  "homepage": "https://github.com/fantian007/console-tag-plugin",
+  "homepage": "https://github.com/fantian007/console-tag",
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
