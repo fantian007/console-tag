@@ -1,26 +1,32 @@
-# console important message with color tags
-
-## Usage
-```typescript
-import { PrettyConsoleWebpackPlugin } from '@sprit/pretty-console-webpack-plugin';
-```
-
-## configure
-```typescript
-
-new PrettyConsoleWebpackPlugin({
-  git: {
-    branch: true,
-    hash: 7,
-    lastCommitDateTime: true
-  },
-  custom() {
-    return {
-      '构建版本': process.env.BUILD_VERSION // 环境变量
-    };
-  }
-})
-```
-
-## Output(console)
+# console message with color tags
 ![示例](./images/console@2x.png)
+
+## rspack
+```typescript
+rspack: (config, { appendPlugins, HtmlPlugin }) => {
+  appendPlugins(new ConsoleTagRspackPlugin({ HtmlPlugin }))
+},
+```
+
+## webpack
+```typescript
+webpackChain(config, { HtmlPlugin }) {
+  config.plugin('tag').use(
+    new ConsoleTagWebpackPlugin(
+      {
+        HtmlPlugin,
+        git: {
+          branch: true,
+          hash: 7,
+          lastCommitDateTime: true,
+        },
+        custom() {
+          return {
+            构建版本: process.env.BUILD_VERSION ?? '-',
+          };
+        },
+      }
+    )
+  )
+}
+```
