@@ -1,41 +1,14 @@
-import { exec, execSync } from 'child_process';
+import { execSync } from 'child_process';
 import path from 'path';
-import removeEmptyLines from './remove-empty-lines';
 
-interface Cb {
-  (err: Error | null, output: string): void;
-}
-
-export default function(
-  gitWorkTree: string | undefined,
-  command: string,
-  callback?: Cb
-) {
+export default function runGitCommand(gitWorkTree: string | undefined, command: string): string {
   const gitCommand = gitWorkTree
-    ? [
-        'git',
-        '--git-dir=' + path.join(gitWorkTree, '.git'),
-        '--work-tree=' + gitWorkTree,
-        command,
-      ].join(' ')
-    : ['git', command].join(' ');
+    ? `git --git-dir=${path.join(gitWorkTree, '.git')} --work-tree=${gitWorkTree} ${command}`
+    : `git ${command}`;
 
-  if (callback) {
-    exec(gitCommand, function(err, stdout) {
-      if (err) {
-        return callback(err, '');
-      }
-      callback(null, removeEmptyLines(stdout));
-    });
-
-    return null;
-  } else {
-    try {
-      const r = removeEmptyLines(`${execSync(gitCommand)}`);
-      return r;
-    } catch (error) {
-      console.error((error as Error).message);
-      return '-';
-    }
+  try {
+    return execSync(gitCommand, { encoding: 'utf-8' }).trim();
+  } catch {
+    return '-';
   }
 }

@@ -5,41 +5,29 @@ import { IWebpackOption } from './interface';
 
 /**
  * webpack 插件
+ * 兼容 html-webpack-plugin v4/v5
  */
 export class ConsoleTagWebpackPlugin {
-  option: IWebpackOption & Required<Pick<IWebpackOption, 'HtmlPlugin'>>;
+  option: IWebpackOption;
 
   constructor(opts: IWebpackOption) {
-    this.option = Object.assign<Omit<IWebpackOption, 'HtmlPlugin'>, IWebpackOption>(DEFAULT_OPTION, opts);
-  }
-
-  getCompilationHook<R>(compilation: Compilation, name: string) {
-    return (compilation.hooks as Record<string, any>)[name] as R;
+    this.option = Object.assign({}, DEFAULT_OPTION, opts);
   }
 
   apply(compiler: Compiler) {
-    compiler.hooks.compilation.tap(PLUGIN_NAME, compilation => {
-      /**
-       * 兼容旧版本
-       */
-      const hooksV1 = this.getCompilationHook(compilation, 'htmlWebpackPluginBeforeHtmlProcessing');
-      const hooksV2 = this.getCompilationHook(compilation, 'html-webpack-plugin-before-html-processing');
+    compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation: Compilation) => {
+      const hooks =
+        (compilation.hooks as Record<string, any>)['html-webpack-plugin-before-html-processing']
+        || (compilation.hooks as Record<string, any>)['htmlWebpackPluginBeforeHtmlProcessing'];
 
-      const alterAssetTagGroupsHook = (hooksV1 ?? hooksV2 ?? this.option.HtmlPlugin.getHooks(compilation).alterAssetTagGroups);
+      const hook = hooks ?? this.option.HtmlPlugin.getHooks(compilation).alterAssetTagGroups;
 
-      if (alterAssetTagGroupsHook) {
-        alterAssetTagGroupsHook.tap(PLUGIN_NAME, (args: any) => {
-          const scriptContent = this.option.HtmlPlugin.createHtmlTagObject(
-            'script',
-            undefined,
-            getHtmlScript(this.option),
-          );
-
-          args.headTags.unshift(scriptContent);
-
-          return args;
-        });
-      }
+      hook?.tap(PLUGIN_NAME, (args: any) => {
+        args.headTags.unshift(
+          this.option.HtmlPlugin.createHtmlTagObject('script', undefined, getHtmlScript(this.option))
+        );
+        return args;
+      });
     });
   }
 }

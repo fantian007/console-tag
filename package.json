@@ -38,7 +38,9 @@
     "size": "size-limit",
     "analyze": "size-limit --why",
     "preview": "cd example && yarn start",
-    "prepublish": "yarn build"
+    "prepublish": "yarn build",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "peerDependencies": {
     "react": ">=16",
@@ -79,6 +81,7 @@
     "tsdx": "^0.14.1",
     "tslib": "^2.4.1",
     "typescript": "^4.9.4",
+    "vitest": "^4.1.7",
     "webpack": "5.28.0"
   },
   "dependencies": {
