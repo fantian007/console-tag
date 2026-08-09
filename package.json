@@ -38,7 +38,7 @@
     "lint": "tsdx lint",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "preview": "cd example && yarn start",
+    "preview": "cd example && yarn dev",
     "prepublishOnly": "yarn build",
     "test": "vitest run",
     "test:watch": "vitest",
