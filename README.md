@@ -23,7 +23,7 @@
 
 ---
 
-Webpack / Rspack 插件，在 HTML 页面控制台注入彩色标签，展示构建信息：环境、Git 分支、Commit Hash、版本、自定义字段。
+Webpack / Rspack / Vite 插件，在 HTML 页面控制台注入彩色标签，展示构建信息：环境、Git 分支、Commit Hash、版本、自定义字段。
 
 ## 安装
 
@@ -48,6 +48,22 @@ plugins: [
     git: { branch: true, hash: 7 },
   }),
 ]
+```
+
+### Vite
+
+```ts
+import { ConsoleTagVitePlugin } from '@sprit/console-tag';
+
+// vite.config.ts
+export default {
+  plugins: [
+    ConsoleTagVitePlugin({
+      git: { branch: true, hash: 7, version: true, lastCommitDateTime: true },
+      custom: () => ({ 构建版本: process.env.BUILD_VERSION ?? '-' }),
+    }),
+  ],
+}
 ```
 
 ### Webpack
@@ -89,6 +105,7 @@ plugins: [
 import {
   ConsoleTagWebpackPlugin,  // Webpack 插件
   ConsoleTagRspackPlugin,   // Rspack 插件
+  ConsoleTagVitePlugin,     // Vite 插件
   Git,                      // Git 信息获取类
 } from '@sprit/console-tag';
 ```
