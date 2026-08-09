@@ -18,7 +18,7 @@
   <a href="./LICENSE">
     <img src="https://img.shields.io/npm/l/@sprit/console-tag" alt="license">
   </a>
-  <img src="https://img.shields.io/badge/tests-34%20passed-brightgreen" alt="tests">
+  <img src="https://img.shields.io/badge/tests-50%20passed-brightgreen" alt="tests">
 </p>
 
 ---

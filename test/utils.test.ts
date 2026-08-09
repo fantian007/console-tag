@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-const mockBranch = vi.hoisted(() => vi.fn());
-const mockHash = vi.hoisted(() => vi.fn());
-const mockVersion = vi.hoisted(() => vi.fn());
-const mockLastCommit = vi.hoisted(() => vi.fn());
+const mockBranch = vi.hoisted(() => vi.fn().mockReturnValue(''));
+const mockHash = vi.hoisted(() => vi.fn().mockReturnValue(''));
+const mockVersion = vi.hoisted(() => vi.fn().mockReturnValue(''));
+const mockLastCommit = vi.hoisted(() => vi.fn().mockReturnValue(''));
 
 vi.mock('../src/helpers/git', () => ({
   default: function () {
@@ -26,10 +26,10 @@ describe('defaultToEmpty', () => {
 describe('combineConsole', () => {
   beforeEach(() => {
     vi.unstubAllEnvs();
-    mockBranch.mockReset();
-    mockHash.mockReset();
-    mockVersion.mockReset();
-    mockLastCommit.mockReset();
+    mockBranch.mockReset().mockReturnValue('');
+    mockHash.mockReset().mockReturnValue('');
+    mockVersion.mockReset().mockReturnValue('');
+    mockLastCommit.mockReset().mockReturnValue('');
   });
 
   it('includes NODE_ENV when option set', () => {
@@ -111,6 +111,17 @@ describe('combineConsole', () => {
 
     expect(items).toHaveLength(6);
   });
+
+  it('deep merges git options: partial config keeps defaults', () => {
+    mockHash.mockReturnValue('abc1234567');
+    const items = combineConsole({ git: { branch: false } });
+    // hash: 7 should be retained from defaults, even though branch is overridden
+    const item = items.find((i) => i[0].includes('git hash'));
+    expect(item).toBeDefined();
+    expect(item![0]).toContain('abc1234');
+    // branch should not be present
+    expect(items.find((i) => i[0].includes('git 分支'))).toBeUndefined();
+  });
 });
 
 describe('getHtmlScript', () => {
@@ -131,5 +142,18 @@ describe('getHtmlScript', () => {
     vi.stubEnv('NODE_ENV', 'path\\dir');
     const script = getHtmlScript({ NODE_ENV: true });
     expect(script).toContain('\\\\');
+  });
+
+  it('escapes closing script tags', () => {
+    vi.stubEnv('NODE_ENV', '</script><script>alert(1)</script>');
+    const script = getHtmlScript({ NODE_ENV: true });
+    expect(script).toContain('<\\/script>');
+    expect(script).not.toContain('</script>');
+  });
+
+  it('escapes newlines', () => {
+    vi.stubEnv('NODE_ENV', 'line1\nline2');
+    const script = getHtmlScript({ NODE_ENV: true });
+    expect(script).toContain('\\n');
   });
 });
