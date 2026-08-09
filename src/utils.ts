@@ -1,6 +1,6 @@
 import { IOption } from './interface';
-import { getConsole } from './helpers/console';
-import Git from './helpers/git';
+import { getConsole } from './helpers/console/index';
+import Git from './helpers/git/index';
 
 /** 空值显示字符 */
 export const EMPTY_STR = '-';
