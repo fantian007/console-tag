@@ -22,7 +22,7 @@ export interface Option {
 export interface GetConsole {
   /**
    * @param key {string} - 键
-   * @param val {string} - 键
+   * @param val {string} - 值
    * @param option {Option} - 配置项
    */
   (key: string, val: string, option?: Option): [string, string, string];

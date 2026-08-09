@@ -14,10 +14,11 @@
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "module": "dist/console-tag.esm.js",
   "files": [
     "dist",
     "images",
-    "README.MD"
+    "README.md"
   ],
   "publishConfig": {
     "access": "public",
@@ -38,17 +39,17 @@
     "size": "size-limit",
     "analyze": "size-limit --why",
     "preview": "cd example && yarn start",
-    "prepublish": "yarn build",
+    "prepublishOnly": "yarn build",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "husky"
   },
   "peerDependencies": {
-    "react": ">=16",
     "webpack": "^5.28.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
+  "peerDependenciesMeta": {
+    "@rspack/core": {
+      "optional": true
     }
   },
   "prettier": {
@@ -57,14 +58,13 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "module": "dist/b.esm.js",
   "size-limit": [
     {
-      "path": "dist/b.cjs.production.min.js",
+      "path": "dist/console-tag.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/b.esm.js",
+      "path": "dist/console-tag.esm.js",
       "limit": "10 KB"
     }
   ],

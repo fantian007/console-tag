@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// 需要 link
-const { PrettyConsoleWebpackPlugin } = require('@sprit/pretty-console-webpack-plugin');
+const { ConsoleTagWebpackPlugin } = require('@sprit/console-tag');
 
 /**
  * @type import('webpack').Configuration
@@ -31,14 +30,16 @@ module.exports = {
     ],
   },
   plugins: [
-    new PrettyConsoleWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      template: './public/index.html',
+    new HtmlWebpackPlugin({ template: './public/index.html' }),
+    new ConsoleTagWebpackPlugin({
+      HtmlPlugin: HtmlWebpackPlugin,
+      git: { branch: true, hash: 7, version: true, lastCommitDateTime: true },
+      custom: () => ({ 构建版本: process.env.BUILD_VERSION ?? '-' }),
     }),
   ],
   devServer: {
     static: ['./dist'],
     port: 8000,
-    hot: true
-  }
+    hot: true,
+  },
 };

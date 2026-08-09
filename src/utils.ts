@@ -2,16 +2,29 @@ import { IOption } from './interface';
 import { getConsole } from './helpers/console/index';
 import Git from './helpers/git/index';
 
-/** 空值显示字符 */
 export const EMPTY_STR = '-';
 
-/** nil 时输出空值字符 */
+export const getEnv = (key: string) => process.env[key];
+
 export const defaultToEmpty = (value: string | undefined | null) => value ?? EMPTY_STR;
 
-/** 安全转义供内联 script 使用 */
-const escapeScript = (s: string) => s.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+/** 合并 git 配置，保留未传入的默认值 */
+const mergeGitOption = (git: IOption['git']): NonNullable<IOption['git']> => ({
+  branch: true,
+  hash: 7,
+  version: false,
+  lastCommitDateTime: false,
+  ...git,
+});
 
-/** 聚合 console */
+const escapeScript = (s: string) =>
+  s
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/<\//g, '<\\/')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r');
+
 export const combineConsole = (option: IOption) => {
   const items: ReturnType<typeof getConsole>[] = [];
 
@@ -21,7 +34,7 @@ export const combineConsole = (option: IOption) => {
   }
 
   if (option.git) {
-    const { git } = option;
+    const git = mergeGitOption(option.git);
     const gitIns = new Git();
 
     if (git.branch) {
@@ -29,7 +42,7 @@ export const combineConsole = (option: IOption) => {
     }
     if (git.hash) {
       const h = gitIns.commithash();
-      items.push(getConsole('git hash', defaultToEmpty(h?.slice(0, git.hash))));
+      items.push(getConsole('git hash', defaultToEmpty(h.slice(0, git.hash))));
     }
     if (git.version) {
       items.push(getConsole('git 版本', defaultToEmpty(gitIns.version())));
@@ -48,7 +61,6 @@ export const combineConsole = (option: IOption) => {
   return items;
 };
 
-/** 获取注入 HTML 的 script 内容 */
 export const getHtmlScript = (option: IOption) => {
   const items = combineConsole(option);
   const calls = items.map(

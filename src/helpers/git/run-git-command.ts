@@ -1,13 +1,12 @@
-import { execSync } from 'child_process';
-import path from 'path';
+import { execFileSync } from 'child_process';
 
-export default function runGitCommand(gitWorkTree: string | undefined, command: string): string {
-  const gitCommand = gitWorkTree
-    ? `git --git-dir=${path.join(gitWorkTree, '.git')} --work-tree=${gitWorkTree} ${command}`
-    : `git ${command}`;
+export default function runGitCommand(gitWorkTree: string | undefined, args: string): string {
+  const gitArgs = gitWorkTree
+    ? ['--git-dir', `${gitWorkTree}/.git`, '--work-tree', gitWorkTree, ...args.split(' ')]
+    : args.split(' ');
 
   try {
-    return execSync(gitCommand, { encoding: 'utf-8' }).trim();
+    return execFileSync('git', gitArgs, { encoding: 'utf-8', maxBuffer: 1024 * 1024 }).trim();
   } catch {
     return '-';
   }

@@ -1,13 +1,6 @@
-import 'react-app-polyfill/ie11';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
-const App = () => {
-  return (
-    <div>
-      123456
-    </div>
-  );
-};
+const App = () => <div>console-tag example</div>;
 
-ReactDOM.render(<App />, document.getElementById('root'));
+createRoot(document.getElementById('root')!).render(<App />);
